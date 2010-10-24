@@ -1,10 +1,10 @@
 class HomeController < ApplicationController
   def index
-    @sounds = Sound.all
+    @media = Medium.all
     
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @sounds }
+      format.xml  { render :xml => @media }
     end
   end
 

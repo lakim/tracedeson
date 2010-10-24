@@ -22,5 +22,9 @@ Tracedeson::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+  
+  %w[medium sound video].each do |c|
+    require_dependency File.join("app","models","#{c}.rb")
+  end
 end
 

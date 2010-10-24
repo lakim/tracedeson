@@ -1,2 +1,2 @@
-class Sound < ActiveRecord::Base
+class Sound < Medium
 end

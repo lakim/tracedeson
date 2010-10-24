@@ -101,99 +101,9 @@ var ContentPopup = new Class({
 
 $(document).ready(function() {
 
-/**
- * ContentPopup class
- */
-// function ContentPopup($popup, $trigger, triggerEvent) {
-// 	this.$popup = $popup;
-// 	this.$trigger = $trigger;
-// 	
-// 	// Set zIndex to top
-// 	this.$popup.css({zIndex: 999});
-// 	
-// 	// Save height and shrink it
-// 	this.height = $popup.height();
-// 	console.log(this.height);
-// 	$popup.height(0);
-// 	$popup.hide();
-// 
-// 	this.$trigger.bind(triggerEvent, $.proxy(this.showHandler, this));
-// }
-// ContentPopup.prototype = {
-// 	
-// 	_showDismisser: function() {
-// 		var $dismisser = $('#dismisser');
-// 		
-// 		// Create dismisser if doesn't exist
-// 		if (!$dismisser.length)
-// 		{
-// 			$('body').append('<div id="dismisser" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></div>');
-// 			$dismisser = $('#dismisser');
-// 		}
-// 		
-// 		// Set dismisser just behind active items
-// 		var zIndex = $dismisser.css('zIndex');
-// 		$('.bb.active').each(function(){
-// 			var bbZIndex = $(this).css('zIndex');
-// 			if (bbZIndex <= zIndex)
-// 			{
-// 				$dismisser.css({zIndex: bbZIndex - 1});
-// 			}
-// 		});
-// 		
-// 		// Click event to hide popup
-// 		$dismisser.one('click', $.proxy(this._hideHandler, this));
-// 		
-// 		// Show dismisser
-// 		$dismisser.show();
-// 	},
-// 	_hideDismisser: function() {
-// 		$dismisser = $('#dismisser');
-// 		$dismisser.hide();
-// 		$dismisser.unbind('click');
-// 	},
-// 
-// 	showHandler: function(e) {
-// 		this.show();
-// 	},
-// 	_hideHandler: function(e) {
-// 		this.hide();
-// 	},
-// 
-// 	show: function() {
-// 		// Hide other popups
-// 		for (var i = 0; i < contentPopups.length; i++)
-// 		{
-// 			if (contentPopups[i] !== this)
-// 			{
-// 				//contentPopups[i].hide();
-// 			}
-// 		}
-// 		
-// 		// Show dismisser
-// 		this._showDismisser();
-// 		
-// 		// Show popup with animation
-// 		this.$popup.show();
-// 		this.$popup.animate({height: this.height}, 800);
-// 	},
-// 	hide: function() {
-// 		// Hide popup with animation
-// 		if (this.$popup.height())
-// 		{
-// 			this.$popup.animate(
-// 				{height: 0},
-// 				800,
-// 				function(){
-// 					$(this).hide();
-// 				}
-// 			)
-// 		}
-// 		
-// 		// Hide dismisser
-// 		this._hideDismisser();
-// 	}
-// }
+$.scPlayer.defaults.loadArtworks = 0;
+$.scPlayer.defaults.onDomReady = null;
+$('.sc-player').scPlayer();
 
 // Fade bubbles in
 var bbs = new Array();
@@ -224,5 +134,9 @@ $('#bb-active-3 .content-pane').contentPopup({ trigger: '#bb-active-3', otherPop
 // 	$(this).find('.content-pane').fadeIn(400);
 // });
 
+/* Lightbox */
+$("a[rel^='pretty-photo']").prettyPhoto({
+	show_title: false
+});
 	
 });
