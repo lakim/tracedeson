@@ -1,0 +1,8 @@
+<div id="sounds" class="content-pane">
+	<h1>Lecteur</h1>
+	<ul>
+	<% @sounds.each do |sound| %>
+		<li><%= sound.number %>. <%= sound.title %></li>
+	<% end %>
+	</ul>
+</div>

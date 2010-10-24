@@ -1,4 +1,14 @@
 Tracedeson::Application.routes.draw do
+  get "home/index"
+
+  namespace :admin do
+    # Directs /admin/products/* to Admin::ProductsController
+    # (app/controllers/admin/products_controller.rb)
+    resources :sounds
+  end
+  
+  root :to => "home#index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

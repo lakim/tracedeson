@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>trace de son</title>
+  <%= stylesheet_link_tag 'reset-min-3.1.1', 'style' %>
+  <%= javascript_include_tag 'jquery-1.4.2', 'mootools-1.2.4-base', 'Class.Mutators.jQuery', 'home' %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<div id="left-bg">&nbsp;</div>
+<div id="right-bg"></div>
+<div id="page">
+<%= yield %>
+</div>
+</body>
+</html>
