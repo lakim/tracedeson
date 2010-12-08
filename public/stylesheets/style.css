@@ -96,41 +96,40 @@ body {
 	height: 90px;
 	background-image: url('../images/bb_inactive_8.png');
 }
-#bb-active-1 {
+#bb-active-project {
 	top: 360px;
 	left: 128px;
 	width: 142px;
 	height: 142px;
 	background-image: url('../images/bb_active_1.png');
 }
-#bb-active-1 .bb-title {
+#bb-active-project .bb-title {
 	top: -20px;
 	right: 50%;
 }
-#bb-active-2 {
+#bb-active-sounds {
 	top: 82px;
 	left: 660px;
 	width: 134px;
 	height: 134px;
 	background-image: url('../images/bb_active_2.png');
 }
-#bb-active-2 .bb-title {
+#bb-active-sounds .bb-title {
 	top: 16px;
 	left: 50%;
 	margin-left: -60px;
 }
-#bb-active-3 {
+#bb-active-contact {
 	top: 490px;
 	left: 500px;
 	width: 31px;
 	height: 31px;
 	background-image: url('../images/bb_active_3.png');
 }
-#bb-active-3 .bb-title {
+#bb-active-contact .bb-title {
 	bottom: -20px;
-	left: -;
-	width: 100px;
-	margin-left: -50px;
+	left: -70px;
+	width: 140px;
 }
 
 .bb-title {

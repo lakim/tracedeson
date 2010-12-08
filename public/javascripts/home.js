@@ -3,7 +3,7 @@ var ContentPopup = new Class({
 	Implements: Options,
 	options: {
 		triggerEvent: 'click',
-		popAnimSpeed: 800
+		popAnimSpeed: 1000
 	},
 	
 	jQuery: 'contentPopup',
@@ -14,7 +14,7 @@ var ContentPopup = new Class({
 		
 		// Init/cache elements
 		this.$trigger = $(this.options.trigger);
-		this.$otherPopups = $(this.options.otherPopups);
+		this.$otherPopups = $(this.options.otherPopups).not(this.$elt);
 		
 		// Set zIndex to top
 		this.$elt.css({ zIndex: 999 });
@@ -69,7 +69,9 @@ var ContentPopup = new Class({
 
 	show: function() {
 		// Hide other popups
-		this.$otherPopups.contentPopup('hide');
+		this.$otherPopups.each(function(){
+			$(this).contentPopup('hide');
+		});
 		
 		// Show dismisser
 		this._showDismisser();
@@ -126,9 +128,9 @@ $('.active').hover(function(){
 // $('.active').each(function(){
 // 	contentPopups.push(new ContentPopup($(this).find('.content-pane'), $(this), 'click'));
 // });
-$('#bb-active-1 .content-pane').contentPopup({ trigger: '#bb-active-1', otherPopups: '.content-pane' });
-$('#bb-active-2 .content-pane').contentPopup({ trigger: '#bb-active-2', otherPopups: '.content-pane' });
-$('#bb-active-3 .content-pane').contentPopup({ trigger: '#bb-active-3', otherPopups: '.content-pane' });
+$('#bb-active-project .content-pane').contentPopup({ trigger: '#bb-active-project', otherPopups: '.content-pane' });
+$('#bb-active-sounds .content-pane').contentPopup({ trigger: '#bb-active-sounds', otherPopups: '.content-pane' });
+$('#bb-active-contact .content-pane').contentPopup({ trigger: '#bb-active-contact', otherPopups: '.content-pane' });
 // var popup = new ContentPopup('.content-pane');
 // $('.active').click(function(){
 // 	$(this).find('.content-pane').fadeIn(400);
