@@ -163,7 +163,7 @@ $(document).ready(function() {
   });
   for (var i = 0; i < bbs.length; i++)
   {
-    bbs[i].fadeIn(3000 + 4000 * Math.random());
+    bbs[i].fadeIn(6000 + 6000 * Math.random());
   }
 
   // Bubble titles
