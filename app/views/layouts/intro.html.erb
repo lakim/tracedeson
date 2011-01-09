@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>trace de son</title>
+  <%= stylesheet_link_tag 'reset-min-3.1.1', 'style' %>
+  <%= javascript_include_tag 'jquery-1.4.2' %>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <%= csrf_meta_tag %>
+</head>
+<body>
+<div id="intro-page">
+<%= yield %>
+</div>
+<%= link_to "Passer l'intro", home_path, :id => 'skip-intro' %>
+</body>
+</html>

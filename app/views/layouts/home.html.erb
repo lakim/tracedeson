@@ -3,7 +3,8 @@
 <head>
   <title>trace de son</title>
   <%= stylesheet_link_tag 'reset-min-3.1.1', 'style', 'pretty-photo' %>
-  <%= javascript_include_tag 'jquery-1.4.2', 'mootools-1.2.4-base', 'Class.Mutators.jQuery', 'home', 'soundcloud.player.api', 'sc-player', 'jquery.prettyPhoto' %>
+  <%= javascript_include_tag 'jquery-1.4.2', 'mootools-1.2.4-base', 'Class.Mutators.jQuery', 'home', 'soundmanager/soundmanager2', 'soundcloud.player.api', 'sc-player', 'jquery.prettyPhoto' %>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -12,5 +13,6 @@
 <div id="page">
 <%= yield %>
 </div>
+<div id="trame-control"></div>
 </body>
 </html>

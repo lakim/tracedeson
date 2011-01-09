@@ -7,11 +7,13 @@ body {
 	font-size: 14px;
 	color: black;
 }
-#page {
+#page, #intro-page {
 	position: relative;
 	height: 620px;
 	width: 960px;
 	margin: 0 auto;
+}
+#page {
 	background: transparent url('../images/bg_main.png') no-repeat scroll center 264px;
 }
 #left-bg, #right-bg {
@@ -29,23 +31,38 @@ body {
 	background: transparent url('../images/bg_right_repeat.png') repeat-x scroll left 264px;
 }
 
+p {
+	margin-bottom: 1em;
+}
+li {
+	margin-left: 2em;
+}
+ul li {
+	list-style-type: disc;
+}
+h1, h2, h3 {
+  font-weight: bold;
+}
+
+/* INTRO */
+#intro {
+	position: relative;
+	left: 50%;
+	top: 94px;
+	margin-left: -360px;
+}
+#skip-intro {
+	display: block;
+	margin-top: 25px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 11px;
+}
+
 .bb {
 	display: none;
 	position: absolute;
 	background: transparent url() no-repeat scroll left top;
-}
-.bb.active {
-	z-index: 100;
-}
-.bb.active:hover {
-	cursor: pointer;
-}
-#bb-inactive-1 {
-	top: 151px;
-	left: 246px;
-	width: 96px;
-	height: 96px;
-	background-image: url('../images/bb_inactive_1.png');
 }
 #bb-inactive-2 {
 	top: 79px;
@@ -96,12 +113,30 @@ body {
 	height: 90px;
 	background-image: url('../images/bb_inactive_8.png');
 }
+.bb.active {
+	z-index: 100;
+}
+.bb.active:hover {
+	cursor: pointer;
+}
+#bb-active-matter {
+	top: 151px;
+	left: 246px;
+	width: 97px;
+	height: 97px;
+	z-index: 101;
+	background-image: url('../images/bb_active_matter.png');
+}
+#bb-active-matter .bb-title {
+	top: -20px;
+	right: 50%;
+}
 #bb-active-project {
 	top: 360px;
 	left: 128px;
 	width: 142px;
 	height: 142px;
-	background-image: url('../images/bb_active_1.png');
+	background-image: url('../images/bb_active_project.png');
 }
 #bb-active-project .bb-title {
 	top: -20px;
@@ -112,7 +147,7 @@ body {
 	left: 660px;
 	width: 134px;
 	height: 134px;
-	background-image: url('../images/bb_active_2.png');
+	background-image: url('../images/bb_active_sounds.png');
 }
 #bb-active-sounds .bb-title {
 	top: 16px;
@@ -124,7 +159,7 @@ body {
 	left: 500px;
 	width: 31px;
 	height: 31px;
-	background-image: url('../images/bb_active_3.png');
+	background-image: url('../images/bb_active_contact.png');
 }
 #bb-active-contact .bb-title {
 	bottom: -20px;
@@ -148,22 +183,76 @@ body {
 	background-color: white;
 	cursor: auto;
 }
+#matter {
+	width: 400px;
+	top: 30px;
+	left: 48px;
+}
 #contact {
 	width: 200px;
 	bottom: 30px;
 	left: 36px;
 }
-#about {
+#project {
 	width: 360px;
 	bottom: 30px;
 	left: 36px;
 }
 #sounds {
-	width: 300px;
-	top: 30px;
-	right: 36px;
+		width: 300px;
+		top: 30px;
+		right: 36px;
+		font-size: 11.5px;
+	}
+	#sounds li {
+		list-style-type: none;
+		margin-left: 0;
+	}
+	#sounds h2 span {
+		display: block;
+		height: 24px;
+		width: 100px;
+		line-height: 24px;
+		padding-left: 2px;
+		padding-top: 1px;
+	}
+	#sounds h2 img {
+		display: block;
+		float: left;
+	}
+	#video-title {
+		margin-top: 20px;
+	}
+	#videos-list a {
+		display: block;
+		height: 24px;
+		width: 300px;
+		color: #333;
+		text-decoration: none;
+	}
+	#videos-list img {
+		display: block;
+		float: left;
+	}
+	#videos-list span {
+		display: block;
+		height: 24px;
+		width: 100px;
+		line-height: 24px;
+		padding-left: 24px;
+	}
+#trame-control {
+	position: fixed;
+	bottom: 4px;
+	right: 4px;
+	width: 24px;
+	height: 24px;
+	background: transparent url('../images/no-sound-icon.png') no-repeat scroll top left;
+	cursor: pointer;
 }
-
+#trame-control.play {
+	background-image: url('../images/sound-icon.png');
+}
 
 /* SOUNDCLOUD PLAYER */
 
@@ -275,7 +364,7 @@ body {
 	position: absolute;
 	float: left;
 	width: 94%;
-	left: 18px;
+	left: 24px;
 	overflow: auto;
 	z-index: 999;
 }
@@ -412,7 +501,7 @@ body {
 
 .sc-player:hover a, .sc-player.playing a {
 	color: #fff;
-	text-shadow: #000 1px 1px 1px;
+	text-shadow: #000 0 0 1px;
 }
 
 .sc-track-duration {

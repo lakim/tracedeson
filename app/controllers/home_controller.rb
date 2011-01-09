@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   def index
-    @media = Medium.all
+    @sounds = Medium.find_all_by_type('Sound')
+    @videos = Medium.find_all_by_type('Video')
     
     respond_to do |format|
       format.html

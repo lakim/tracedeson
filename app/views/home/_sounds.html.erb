@@ -1,14 +1,17 @@
 <div id="sounds" class="content-pane">
-	<h1>Lecteur</h1>
-	<ul>
-	<% @media.each do |medium| %>
+	<h2><img src="images/sound-icon.png" /><span>Sons</span></h2>
+	<ul id="sounds-list">
+	<% @sounds.each do |medium| %>
 		<li id="sound-<%= medium.number %>">
-		  <%= medium.type %> - 
-		<% if medium.type == 'Sound' %>
 			<a href="<%= medium.url %>" class="sc-player"><%= medium.title %></a>
-		<% elsif medium.type == 'Video' %>
-		  <a href="<%= medium.url %>" rel="pretty-photo"><%= medium.title %></a>
-		<% end %>
+		</li>
+	<% end %>
+	</ul>
+	<h2 id="video-title"><img src="images/video-icon.png" /><span>Videos</span></h2>
+	<ul id="videos-list">
+	<% @videos.each do |medium| %>
+		<li id="sound-<%= medium.number %>">
+		  <a href="<%= medium.url %>" rel="pretty-photo"><img src="images/play.png" /><span><%= medium.title %></span></a>
 		</li>
 	<% end %>
 	</ul>

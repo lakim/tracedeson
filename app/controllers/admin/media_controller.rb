@@ -1,4 +1,5 @@
-class Admin::MediaController < ApplicationController
+class Admin::MediaController < Admin::AdminController
+  
   # GET /medias
   # GET /medias.xml
   def index
