@@ -68,7 +68,6 @@ h1, h2, h3 {
 }
 
 .bb {
-	display: none;
 	position: absolute;
 	background: transparent url() no-repeat scroll left top;
 }
@@ -158,7 +157,7 @@ h1, h2, h3 {
 	background-image: url('../images/bb_active_sounds.png');
 }
 #bb-active-sounds .bb-title {
-	top: 16px;
+	top: 11px;
 	left: 50%;
 	margin-left: -60px;
 }
@@ -176,7 +175,6 @@ h1, h2, h3 {
 }
 
 .bb-title {
-	display: none;
 	position: absolute;
 	width: 120px;
 	text-align: center;

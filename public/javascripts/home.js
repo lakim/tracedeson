@@ -14,6 +14,7 @@ var ContentPopup = new Class({
 
     // Init/cache elements
     this.$trigger = $(this.options.trigger);
+    this.$title = this.$trigger.find(this.options.title);
     this.$otherPopups = $(this.options.otherPopups).not(this.$elt);
 
     // Set zIndex to top
@@ -79,7 +80,7 @@ var ContentPopup = new Class({
   },
 
   show: function() {
-    if (this.$elt.height() == this.height)
+    if (!this.hidden())
     {
       return;
     }
@@ -98,6 +99,9 @@ var ContentPopup = new Class({
     // Show popup with animation
     this.$elt.show();
     this.$elt.animate({ height: this.height }, this.options.popAnimSpeed);
+    
+    // Show title
+    this.$title.show();
   },
   hide: function() {
     // Hide popup with animation
@@ -114,6 +118,13 @@ var ContentPopup = new Class({
 
     // Hide dismisser
     this._hideDismisser();
+    
+    // Hide title
+    this.$title.hide();
+  },
+  
+  hidden: function() {
+    return !this.$elt.is(':visible');
   }
 
 });
@@ -121,6 +132,10 @@ var ContentPopup = new Class({
 
 
 $(document).ready(function() {
+  
+  /* Hide elements */
+  $('.bb-title').hide();
+  $('.bb').hide();
   
   trameCallbacks = {
     onplay: function() {
@@ -174,14 +189,18 @@ $(document).ready(function() {
   });
   for (var i = 0; i < bbs.length; i++)
   {
-    bbs[i].fadeIn(6000 + 6000 * Math.random());
+    var delay = 6000 + 6000 * Math.random();
+    bbs[i].fadeIn(delay);
   }
 
   // Bubble titles
   $('.active').hover(function(){
     $(this).find('.bb-title').fadeIn(400);
   }, function(){
-    $(this).find('.bb-title').fadeOut(400);
+    if ($(this).find('.content-pane').contentPopup('hidden'))
+    {
+      $(this).find('.bb-title').fadeOut(400);
+    }
   });
   
   /* Accordion */
@@ -192,10 +211,10 @@ $(document).ready(function() {
   };
   $('#sounds-list').accordion(accordionOptions);
   
-  $('#bb-active-matter .content-pane').contentPopup({ trigger: '#bb-active-matter', otherPopups: '.content-pane' });
-  $('#bb-active-project .content-pane').contentPopup({ trigger: '#bb-active-project', otherPopups: '.content-pane' });
-  $('#bb-active-sounds .content-pane').contentPopup({ trigger: '#bb-active-sounds', otherPopups: '.content-pane' });
-  $('#bb-active-contact .content-pane').contentPopup({ trigger: '#bb-active-contact', otherPopups: '.content-pane' });
+  $('#bb-active-matter .content-pane').contentPopup({ trigger: '#bb-active-matter', otherPopups: '.content-pane', title: '.bb-title' });
+  $('#bb-active-project .content-pane').contentPopup({ trigger: '#bb-active-project', otherPopups: '.content-pane', title: '.bb-title' });
+  $('#bb-active-sounds .content-pane').contentPopup({ trigger: '#bb-active-sounds', otherPopups: '.content-pane', title: '.bb-title' });
+  $('#bb-active-contact .content-pane').contentPopup({ trigger: '#bb-active-contact', otherPopups: '.content-pane', title: '.bb-title' });
   
   /* Lightbox */
   $("a[rel^='pretty-photo']").prettyPhoto({
