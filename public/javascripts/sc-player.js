@@ -9,7 +9,7 @@
 *   <a href="http://soundcloud.com/matas/hobnotropic" class="sc-player">My new dub track</a>
 *   The link will be automatically replaced by the HTML based player
 */
-;(function($) {
+(function($) {
   // Convert milliseconds into Hours (h), Minutes (m), and Seconds (s)
   var timecode = function(ms) {
     var hms = function(ms) {
@@ -30,9 +30,15 @@
 
     return tc.join('.');
   };
-  
+  // shuffle the array
+  var shuffle = function(arr) {
+    arr.sort(function() { return Math.round(Math.random()); } );
+    return arr;
+  };
+
   var debug = true,
       useSandBox = false,
+      $doc = $(document),
       log = function(args) {
         if(debug && window.console && window.console.log){
           window.console.log.apply(window.console, arguments);
@@ -43,7 +49,7 @@
         return (/api\./.test(url) ? url + '?' : 'http://api.' + domain +'/resolve?url=' + url + '&') + 'format=json&consumer_key=' + apiKey +'&callback=?';
       };
 
-  
+
   var audioEngine = function() {
     var html5AudioAvailable = function() {
         var state = false;
@@ -53,7 +59,7 @@
           // let's enable the html5 audio on selected mobile devices first, unlikely to support Flash
           // the desktop browsers are still better with Flash, e.g. see the Safari 10.6 bug
           // comment the following line out, if you want to force the html5 mode
-          state = state &&  (/iPad|iphone|mobile|pre\//i).test(navigator.userAgent);
+          state = state && (/iPad|iphone|mobile|pre\//i).test(navigator.userAgent);
         }catch(e){
           // there's no audio support here sadly
         }
@@ -61,22 +67,22 @@
     }(),
     callbacks = {
       onReady: function() {
-        $(document).trigger('scPlayer:onAudioReady');
+        $doc.trigger('scPlayer:onAudioReady');
       },
       onPlay: function() {
-        $(document).trigger('scPlayer:onMediaPlay');
+        $doc.trigger('scPlayer:onMediaPlay');
       },
       onPause: function() {
-        $(document).trigger('scPlayer:onMediaPause');
+        $doc.trigger('scPlayer:onMediaPause');
       },
       onEnd: function() {
-        $(document).trigger('scPlayer:onMediaEnd');
+        $doc.trigger('scPlayer:onMediaEnd');
       },
       onBuffer: function(percent) {
-        $(document).trigger({type: 'scPlayer:onMediaBuffering', percent: percent});
+        $doc.trigger({type: 'scPlayer:onMediaBuffering', percent: percent});
       }
     };
-    
+
     var html5Driver = function() {
       var player = new Audio(),
           onTimeUpdate = function(event){
@@ -92,9 +98,9 @@
                 buffer = ((obj.buffered.length && obj.buffered.end(0)) / obj.duration) * 100;
             callbacks.onBuffer(buffer);
           };
-        
+
       $('<div class="sc-player-engine-container"></div>').appendTo(document.body).append(player);
-      
+
       // prepare the listeners
       player.addEventListener('play', callbacks.onPlay, false);
       player.addEventListener('pause', callbacks.onPause, false);
@@ -102,11 +108,11 @@
       player.addEventListener('timeupdate', onTimeUpdate, false);
       player.addEventListener('progress', onProgress, false);
 
-      
+
       return {
-        load: function(track) {
+        load: function(track, apiKey) {
           player.pause();
-          player.src = track.stream_url;
+          player.src = track.stream_url + '?consumer_key=' + apiKey;
           player.load();
           player.play();
         },
@@ -114,6 +120,10 @@
           player.play();
         },
         pause: function() {
+          player.pause();
+        },
+        stop: function(){
+          player.currentTime = 0;
           player.pause();
         },
         seek: function(relative){
@@ -134,9 +144,9 @@
       };
 
     };
-    
 
-    
+
+
     var flashDriver = function() {
       var engineId = 'scPlayerEngine',
           player,
@@ -148,35 +158,35 @@
                 '<param name="allowscriptaccess" value="always" />'+
                 '</object>';
             } else {
-              return '<object height="100%" width="100%" id="' + engineId + '" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">'+
+              return '<object height="100%" width="100%" id="' + engineId + '">'+
                 '<embed allowscriptaccess="always" height="100%" width="100%" src="' + swf + '" type="application/x-shockwave-flash" name="' + engineId + '" />'+
                 '</object>';
             }
           };
 
-      
-      
+
+
       // listen to audio engine events
       // when the loaded track is ready to play
       soundcloud.addEventListener('onPlayerReady', function(flashId, data) {
         player = soundcloud.getPlayer(engineId);
         callbacks.onReady();
       });
-    
+
       // when the loaded track finished playing
       soundcloud.addEventListener('onMediaEnd', callbacks.onEnd);
-    
+
       // when the loaded track is still buffering
       soundcloud.addEventListener('onMediaBuffering', function(flashId, data) {
         callbacks.onBuffer(data.percent);
       });
-    
+
       // when the loaded track started to play
       soundcloud.addEventListener('onMediaPlay', callbacks.onPlay);
-    
+
       // when the loaded track is was paused
       soundcloud.addEventListener('onMediaPause', callbacks.onPause);
-      
+
       return {
         load: function(track) {
           var url = track.permalink_url;
@@ -193,14 +203,17 @@
         pause: function() {
           player && player.api_pause();
         },
+        stop: function(){
+          player && player.api_stop();
+        },
         seek: function(relative){
           player && player.api_seekTo((player.api_getTrackDuration() * relative));
         },
         getDuration: function() {
-          return player && player.api_getTrackDuration && player.api_getTrackDuration();
+          return player && player.api_getTrackDuration && player.api_getTrackDuration() * 1000;
         },
         getPosition: function() {
-          return player && player.api_getTrackPosition && player.api_getTrackPosition();
+          return player && player.api_getTrackPosition && player.api_getTrackPosition() * 1000;
         },
         setVolume: function(val) {
           if(player && player.api_setVolume){
@@ -210,19 +223,19 @@
 
       };
     };
-    
+
     return html5AudioAvailable? html5Driver() : flashDriver();
 
   }();
-  
-  
-  
-  var autoPlay = false,
+
+
+
+  var apiKey,
+      didAutoPlay = false,
       players = [],
       updates = {},
       currentUrl,
-
-      loadTracksData = function($player, links, apiKey) {
+      loadTracksData = function($player, links, key) {
         var index = 0,
             playerObj = {node: $player, tracks: []},
             loadUrl = function(link) {
@@ -247,7 +260,7 @@
                 }else if($.isArray(data)){
                   playerObj.tracks = playerObj.tracks.concat(data);
                 }
-                if(links[index]){                    
+                if(links[index]){
                   // if there are more track to load, get them from the api
                   loadUrl(links[index]);
                 }else{
@@ -256,9 +269,10 @@
                 }
              });
            };
+        // update current API key
+        apiKey = key;
         // update the players queue
         players.push(playerObj);
-    
         // load first tracks
         loadUrl(links[index]);
       },
@@ -283,7 +297,7 @@
         $('.sc-artwork-list li', $player).each(function(index) {
           var $item = $(this),
               itemTrack = $item.data('sc-track');
-      
+
           if (itemTrack === track) {
             // show track artwork
             $item
@@ -298,17 +312,11 @@
             $item.removeClass('active');
           }
         });
-        // cache the references to most updated DOM nodes in the progress bar
-        updates = {
-          $buffer: $('.sc-buffer', $player), 
-          $played: $('.sc-played', $player), 
-          position:  $('.sc-position', $player)[0]
-        };
         // update the track duration in the progress bar
         $('.sc-duration', $player).html(timecode(track.duration));
         // put the waveform into the progress bar
         $('.sc-waveform-container', $player).html('<img src="' + track.waveform_url +'" />');
-    
+
         $player.trigger('onPlayerTrackSwitch.scPlayer', [track]);
       },
       play = function(track) {
@@ -319,8 +327,7 @@
         }else{
           currentUrl = url;
           // log('will load', url);
-          audioEngine.load(track);
-          autoPlay = true;
+          audioEngine.load(track, apiKey);
         }
       },
       getPlayerData = function(node) {
@@ -338,12 +345,39 @@
       onPlay = function(player, id) {
         var track = getPlayerData(player).tracks[id || 0];
         updateTrackInfo(player, track);
+        // cache the references to most updated DOM nodes in the progress bar
+        updates = {
+          $buffer: $('.sc-buffer', player),
+          $played: $('.sc-played', player),
+          position:  $('.sc-position', player)[0]
+        };
         updatePlayStatus(player, true);
         play(track);
       },
       onPause = function(player) {
         updatePlayStatus(player, false);
         audioEngine.pause();
+      },
+      onFinish = function() {
+        var $player = updates.$played.closest('.sc-player'),
+            $nextItem;
+        // update the scrubber width
+        updates.$played.css('width', '0%');
+        // show the position in the track position counter
+        updates.position.innerHTML = timecode(0);
+        // reset the player state
+        updatePlayStatus($player, false);
+        // stop the audio
+        audioEngine.stop();
+        // continue playing through all players
+        // TODO create a nicer auto-play flow
+        log('track finished get the next one');
+        $nextItem = $('.sc-trackslist li.active', $player).next('li');
+        // try to find the next track in other player
+        if(!$nextItem.length){
+          $nextItem = $player.nextAll('div.sc-player:first').find('.sc-trackslist li.active');
+        }
+        $nextItem.click();
       },
       onSeek = function(player, relative) {
         audioEngine.seek(relative);
@@ -371,9 +405,9 @@
         audioEngine.setVolume(soundVolume);
       },
       positionPoll;
-  
+
     // listen to audio engine events
-    $(document)
+    $doc
       .bind('scPlayer:onAudioReady', function(event) {
         log('onPlayerReady: audio engine is ready');
         audioEngine.play();
@@ -384,46 +418,60 @@
       .bind('scPlayer:onMediaPlay', function(event) {
         clearInterval(positionPoll);
         positionPoll = setInterval(function() {
-          var duration = audioEngine.getDuration() * 1000;
-          var position = audioEngine.getPosition();
-          updates.$played.css('width', ((position / audioEngine.getDuration()) * 100) + '%');
-          updates.position.innerHTML = timecode(position * 1000); 
-        }, 50);
+          var duration = audioEngine.getDuration(),
+              position = audioEngine.getPosition(),
+              relative = (position / duration);
+
+          // update the scrubber width
+          updates.$played.css('width', (100 * relative) + '%');
+          // show the position in the track position counter
+          updates.position.innerHTML = timecode(position);
+          // announce the track position to the DOM
+          $doc.trigger({
+            type: 'onMediaTimeUpdate.scPlayer',
+            duration: duration,
+            position: position,
+            relative: relative
+          });
+        }, 500);
       })
       // when the loaded track is was paused
       .bind('scPlayer:onMediaPause', function(event) {
         clearInterval(positionPoll);
+        positionPoll = null;
       })
       // change the volume
       .bind('scPlayer:onVolumeChange', function(event) {
         onVolume(event.volume);
       })
       .bind('scPlayer:onMediaEnd', function(event) {
-        log('track finished get the next one');
-        if(autoPlay){      
-          $('.sc-trackslist li.active').next('li').click();
-        }
+        onFinish();
       })
       .bind('scPlayer:onMediaBuffering', function(event) {
         updates.$buffer.css('width', event.percent + '%');
       });
-    
+
 
   // Generate custom skinnable HTML/CSS/JavaScript based SoundCloud players from links to SoundCloud resources
   $.scPlayer = function(options, node) {
     var opts = $.extend({}, $.scPlayer.defaults, options),
         playerId = players.length,
         $source = node && $(node),
+        sourceClasses = $source[0].className.replace('sc-player', ''),
         links = opts.links || $.map($('a', $source).add($source.filter('a')), function(val) { return {url: val.href, title: val.innerHTML}; }),
         $player = $('<div class="sc-player loading"></div>').data('sc-player', {id: playerId}),
         $artworks = $('<ol class="sc-artwork-list"></ol>').appendTo($player),
         $info = $('<div class="sc-info"><h3></h3><h4></h4><p></p><a href="#" class="sc-info-close">X</a></div>').appendTo($player),
         $controls = $('<div class="sc-controls"></div>').appendTo($player),
         $list = $('<ol class="sc-trackslist"></ol>').appendTo($player);
-        
-        // enable autoplay if set in the options
-        autoPlay = opts.autoPlay;
-        
+
+        // add the classes of the source node to the player itself
+        // the players can be indvidually styled this way
+        if(sourceClasses || opts.customClass){
+          $player.addClass(sourceClasses).addClass(opts.customClass);
+        }
+
+
         // adding controls to the player
         $player
           .find('.sc-controls')
@@ -435,13 +483,17 @@
               .append('<div class="sc-volume-slider"><span class="sc-volume-status" style="width:' + soundVolume +'%"></span></div>')
               .append('<div class="sc-time-span"><div class="sc-waveform-container"></div><div class="sc-buffer"></div><div class="sc-played"></div></div>')
               .append('<div class="sc-time-indicators"><span class="sc-position"></span> | <span class="sc-duration"></span></div>');
-        
+
         // load and parse the track data from SoundCloud API
         loadTracksData($player, links, opts.apiKey);
         // init the player GUI, when the tracks data was laoded
         $player.bind('onTrackDataLoaded.scPlayer', function(event) {
           // log('onTrackDataLoaded.scPlayer', event.playerObj, playerId, event.target);
           var tracks = event.playerObj.tracks;
+          if (opts.randomize) {
+            tracks = shuffle(tracks);
+          }
+          // create the playlist
           $.each(tracks, function(index, track) {
             var active = index === 0;
             // create an item in the playlist
@@ -456,7 +508,7 @@
           $player
             .removeClass('loading')
             .trigger('onPlayerInit.scPlayer');
-          
+
           // update the element before rendering it in the DOM
           $player.each(function() {
             if($.isFunction(opts.beforeRender)){
@@ -468,6 +520,11 @@
           $('.sc-position', $player)[0].innerHTML = timecode(0);
           // set up the first track info
           updateTrackInfo($player, tracks[0]);
+          // if auto play is enabled and it's the first player, start playing
+          if(opts.autoPlay && !didAutoPlay){
+            onPlay($player);
+            didAutoPlay = true;
+          }
         });
 
 
@@ -478,21 +535,26 @@
 
     return $player;
   };
-  
+
   // stop all players, might be useful, before replacing the player dynamically
   $.scPlayer.stopAll = function() {
     $('.sc-player.playing a.sc-pause').click();
   };
-  
+
   // plugin wrapper
   $.fn.scPlayer = function(options) {
-    return this.each(function() {
+    // reset the auto play
+    didAutoPlay = false;
+    // create the players
+    this.each(function() {
       $.scPlayer(options, this);
     });
+    return this;
   };
 
   // default plugin options
   $.scPlayer.defaults = $.fn.scPlayer.defaults = {
+    customClass: null,
     // do something with the dom object before you render it, add nodes, get more data from the services etc.
     beforeRender  :   function(tracksData) {
       var $player = $(this);
@@ -502,16 +564,17 @@
       $('a.sc-player, div.sc-player').scPlayer();
     },
     autoPlay: false,
+    randomize: false,
     loadArtworks: 5,
     // the default Api key should be replaced by your own one
     // get it here http://soundcloud.com/you/apps/new
     apiKey: 'htuiRd1JP11Ww0X72T1C3g'
   };
-  
-  
+
+
   // the GUI event bindings
   //--------------------------------------------------------
-  
+
   // toggling play/pause
   $('a.sc-play, a.sc-pause').live('click', function(event) {
     var $list = $(this).closest('.sc-player').find('ol.sc-trackslist');
@@ -519,7 +582,7 @@
     $list.find('li.active').click();
     return false;
   });
-  
+
   // displaying the info panel in the player
   $('a.sc-info-toggle, a.sc-info-close').live('click', function(event) {
     var $link = $(this);
@@ -546,7 +609,7 @@
     });
     return false;
   });
-  
+
   var scrub = function(node, xPos) {
     var $scrubber = $(node).closest('.sc-time-span'),
         $buffer = $scrubber.find('.sc-buffer'),
@@ -555,15 +618,15 @@
         relative = Math.min($buffer.width(), (xPos  - $available.offset().left)) / $available.width();
     onSeek($player, relative);
   };
-  
+
   var onTouchMove = function(ev) {
     if (ev.targetTouches.length === 1) {
       scrub(ev.target, ev.targetTouches && ev.targetTouches.length && ev.targetTouches[0].clientX);
       ev.preventDefault();
     }
   };
-  
-  
+
+
   // seeking in the loaded track buffer
   $('.sc-time-span')
     .live('click', function(event) {
@@ -578,7 +641,7 @@
       this.removeEventListener('touchmove', onTouchMove, false);
       event.originalEvent.preventDefault();
     });
-  
+
   // changing volume in the player
   var startVolumeTracking = function(node, startEvent) {
     var $node = $(node),
@@ -588,16 +651,16 @@
           return Math.floor(((x - originX)/originWidth)*100);
         },
         update = function(event) {
-          $(document).trigger({type: 'scPlayer:onVolumeChange', volume: getVolume(event.pageX)});
+          $doc.trigger({type: 'scPlayer:onVolumeChange', volume: getVolume(event.pageX)});
         };
     $node.bind('mousemove.sc-player', update);
     update(startEvent);
   };
-  
+
   var stopVolumeTracking = function(node, event) {
     $(node).unbind('mousemove.sc-player');
   };
-  
+
   $('.sc-volume-slider')
     .live('mousedown', function(event) {
       startVolumeTracking(this, event);
@@ -605,8 +668,8 @@
     .live('mouseup', function(event) {
       stopVolumeTracking(this, event);
     });
-  
-  $(document).bind('scPlayer:onVolumeChange', function(event) {
+
+  $doc.bind('scPlayer:onVolumeChange', function(event) {
     $('span.sc-volume-status').css({width: event.volume + '%'});
   });
   // -------------------------------------------------------------------
