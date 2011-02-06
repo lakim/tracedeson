@@ -1,6 +1,8 @@
 class Medium < ActiveRecord::Base
 
   @child_classes = []
+  
+  before_save :desc_to_html
 
   def self.inherited(child)
     @child_classes << child
@@ -19,6 +21,12 @@ class Medium < ActiveRecord::Base
       def human;    singularize; end # only for Rails 3
     end
     return name
+  end
+  
+  private
+  
+  def desc_to_html
+    self.desc_h = RedCloth.new(desc).to_html.gsub(/\<a /, '<a target="_blank" ')
   end
   
 end

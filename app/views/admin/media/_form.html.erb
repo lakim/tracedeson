@@ -27,6 +27,11 @@
     <%= f.label :url %><br />
     <%= f.text_field :url %>
   </div>
+  <div class="field">
+    <%= f.label :desc %>
+    (<a href="http://www.redmine.org/help/wiki_syntax.html" onclick="window.open(&quot;http://www.redmine.org/help/wiki_syntax.html&quot;, &quot;&quot;, &quot;resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes&quot;); return false;">Aide</a>)<br />
+    <%= f.text_area :desc, :size => "50x20" %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

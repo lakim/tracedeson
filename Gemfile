@@ -27,6 +27,7 @@ gem 'rails', '3.0.0'
 #   gem 'webrat'
 # end
 gem 'devise'
+gem 'RedCloth'
 
 group :development, :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'

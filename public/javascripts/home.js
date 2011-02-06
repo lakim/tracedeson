@@ -207,7 +207,7 @@ $(document).ready(function() {
   var accordionOptions = {
     event: "mouseover",
     active: false,
-    header: 'h3'
+    header: '.title'
   };
   $('#sounds-list').accordion(accordionOptions);
   
