@@ -3,9 +3,10 @@ html, body {
 	background-color: white;
 }
 body {
-	font-family: Arial, sans-serif;
-	font-size: 14px;
+	font-family: 'Cantarell', Arial, sans-serif;
+	font-size: 11px;
 	color: black;
+	text-align: justify;
 }
 #page, #intro-page {
 	position: relative;
@@ -14,7 +15,7 @@ body {
 	margin: 0 auto;
 }
 #page {
-	background: transparent url('../images/bg_main.png') no-repeat scroll center 264px;
+	background: transparent url('../images/bg_main.png') no-repeat scroll center 204px;
 }
 #left-bg, #right-bg {
 	position: absolute;
@@ -38,9 +39,6 @@ a {
 a:hover {
 	text-decoration: underline;
 }
-p {
-	margin-bottom: 1em;
-}
 li {
 	margin-left: 2em;
 }
@@ -55,8 +53,11 @@ h1, h2, h3 {
 #intro {
 	position: relative;
 	left: 50%;
-	top: 94px;
-	margin-left: -360px;
+	top: 200px;
+	margin-left: -180px;
+}
+#intro-page {
+  height: 460px !important;
 }
 #skip-intro {
 	display: block;
@@ -179,19 +180,18 @@ h1, h2, h3 {
 	position: absolute;
 	width: 120px;
 	text-align: center;
-	letter-spacing: 0.2em;
 }
 
 .content-pane {
 	position: absolute;
 	overflow: hidden;
 	padding: 6px;
-	border: 1px solid #c7c7c7;
-	background-color: white;
+	border: 1px solid #f0f0f0;
+	background-color: #fdfdfd;
 	cursor: auto;
 }
 #matter {
-	width: 400px;
+	width: 280px;
 	top: 30px;
 	left: 48px;
 }
@@ -200,13 +200,17 @@ h1, h2, h3 {
 	bottom: 30px;
 	left: 36px;
 }
+#contact span {
+  display: inline-block;
+  width: 36px;
+}
 #project {
-	width: 360px;
+	width: 280px;
 	bottom: 30px;
 	left: 36px;
 }
 #sounds {
-		width: 300px;
+		width: 280px;
 		top: 30px;
 		right: 36px;
 		font-size: 11.5px;
@@ -227,21 +231,21 @@ h1, h2, h3 {
 		display: block;
 		float: left;
 	}
-	#video-title {
+	#videos-title {
 		margin-top: 20px;
 	}
-	#videos-list a {
+	.video-title a {
 		display: block;
 		height: 24px;
 		width: 300px;
 		color: #333;
 		text-decoration: none;
 	}
-	#videos-list img {
+	.video-title img {
 		display: block;
 		float: left;
 	}
-	#videos-list span {
+	.video-list span {
 		display: block;
 		height: 24px;
 		width: 100px;
@@ -259,6 +263,9 @@ h1, h2, h3 {
 }
 #trame-control.play {
 	background-image: url('../images/sound-icon.png');
+}
+.ui-state-focus {
+  outline: none;
 }
 
 /* SOUNDCLOUD PLAYER */

@@ -1,23 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>trace de son - benjamin magnin - design sonore</title>
-  <meta name="description" content="Vous avez un projet de création sonore ou musicale pour une vidéo, un spectacle, un site web, un jeu ? Je peux vous aider.">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <%= stylesheet_link_tag 'reset-min-3.1.1', 'style' %>
-  <%= javascript_include_tag 'jquery-1.4.2' %>
-  <%= csrf_meta_tag %>
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-10704744-6']);
-    _gaq.push(['_trackPageview']);
-
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+  <%= render 'layouts/header_common' %>
+  <%= render 'layouts/analytics' %>
 </head>
 <body>
 <div id="intro-page">

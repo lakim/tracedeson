@@ -1,18 +1,18 @@
 <div id="sounds" class="content-pane">
-	<h2><img src="images/sound-icon.png" /><span>Sons</span></h2>
-	<ul id="sounds-list">
-	<% @sounds.each do |medium| %>
-		<li id="sound-<%= medium.number %>">
-			<a href="<%= medium.url %>" class="sc-player"><%= medium.title %></a>
-		</li>
-	<% end %>
-	</ul>
-	<h2 id="video-title"><img src="images/video-icon.png" /><span>Videos</span></h2>
-	<ul id="videos-list">
-	<% @videos.each do |medium| %>
-		<li id="sound-<%= medium.number %>">
-		  <a href="<%= medium.url %>" rel="pretty-photo"><img src="images/play.png" /><span><%= medium.title %></span></a>
-		</li>
-	<% end %>
-	</ul>
+  <h2><img src="images/sound-icon.png" /><span>Sons</span></h2>
+  <div id="sounds-list">
+  <% @sounds.each do |medium| %>
+    <h3 class="sound-title"><a href="<%= medium.url %>" class="sc-player"><%= medium.title %></a></h3>
+    <div class="desc">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  <% end %>
+    <h2 id="videos-title"><img src="images/video-icon.png" /><span>Videos</span></h2>
+  <% @videos.each do |medium| %>
+    <h3 class="video-title"><a href="<%= medium.url %>" rel="pretty-photo"><img src="images/play.png" /><span><%= medium.title %></span></a></h3>
+    <div class="desc">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  <% end %>
+  </div>
 </div>

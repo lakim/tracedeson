@@ -20,12 +20,23 @@ var ContentPopup = new Class({
     this.$elt.css({ zIndex: 999 });
 
     // Save height and shrink it
-    this.height = this.$elt.height();
+    this.height = this.$elt.height() + this._descMaxHeight();
     this.$elt.height(0);
     this.$elt.hide();
 
     // Bind trigger event
     this.$trigger.bind(this.options.triggerEvent, $.proxy(this.showHandler, this));
+  },
+  
+  _descMaxHeight: function() {
+    var maxHeight = 0;
+    this.$elt.find('.desc').each(function(){
+      if ($(this).height() > maxHeight)
+      {
+        maxHeight = $(this).height();
+      }
+    });
+    return maxHeight;
   },
 
   _showDismisser: function() {
@@ -172,7 +183,15 @@ $(document).ready(function() {
   }, function(){
     $(this).find('.bb-title').fadeOut(400);
   });
-
+  
+  /* Accordion */
+  var accordionOptions = {
+    event: "mouseover",
+    active: false,
+    header: 'h3'
+  };
+  $('#sounds-list').accordion(accordionOptions);
+  
   $('#bb-active-matter .content-pane').contentPopup({ trigger: '#bb-active-matter', otherPopups: '.content-pane' });
   $('#bb-active-project .content-pane').contentPopup({ trigger: '#bb-active-project', otherPopups: '.content-pane' });
   $('#bb-active-sounds .content-pane').contentPopup({ trigger: '#bb-active-sounds', otherPopups: '.content-pane' });
