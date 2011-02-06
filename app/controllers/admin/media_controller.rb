@@ -3,7 +3,7 @@ class Admin::MediaController < Admin::AdminController
   # GET /medias
   # GET /medias.xml
   def index
-    @media = Medium.all
+    @media = Medium.order('type ASC, number ASC').all
 
     respond_to do |format|
       format.html # index.html.erb
